@@ -1,13 +1,13 @@
-    const router = require("express").Router();
-    const comments = require("../controllers/comment.controller.js");
-    const auth = require('../middleware/auth');
-    const multer = require('../middleware/multer.config');
+const router = require("express").Router();
+const comments = require("../controllers/comment.controller.js");
+const auth = require('../middleware/auth');
+const multer = require('../middleware/multer.config');
   
-    // Create a new Tutorial
-    router.post("/post/:postId/create", auth, comments.createComment);
-    router.delete("/post/:postId/comment/:id/delete", auth, comments.deleteComment);
-    router.delete("/post/:postId/comment/:id/update", auth, comments.updateComment);
+router.post("/:postId/create", auth, multer, comments.createComment);
+router.delete("/:id/delete", auth, multer, comments.deleteComment);
+router.put("/:id/update", auth, multer, comments.updateComment);
+router.get("/read", auth, multer,comments.readComments)
+router.get("/read/:id", auth, multer,comments.readPostComments)
+router.get(":id/read", auth, multer, comments.readOneComment)
 
-    //router.put("/post/:id/update", auth, comments.updateComment);
-
-    module.exports = router;
+module.exports = router;

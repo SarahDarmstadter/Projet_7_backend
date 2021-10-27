@@ -7,9 +7,9 @@
     // Create a new User
     router.post("/sign-up",multer, users.signup);
     router.post("/login",  users.login);
-    router.get("/profil", auth, multer, users.getProfile);
+    router.get("/profil/:id", auth, multer, users.getProfile);
     router.delete("/suppression-profile", auth, multer, users.deleteProfile);
-    router.put("/profil/update", auth, multer, users.modifyProfil);
+    router.put("/profil/update", auth, multer, users.modifyUser);
 
 
 

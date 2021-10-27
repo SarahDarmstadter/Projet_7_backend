@@ -11,9 +11,8 @@ module.exports = (sequelize, Sequelize) => {
       image: {
         type: Sequelize.STRING,
         allowNull: true
-      }
-    });
-  
-    return Post;
-  };
+      }, 
+    })
+    return Post
+};
   

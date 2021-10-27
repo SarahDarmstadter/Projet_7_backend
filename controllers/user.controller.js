@@ -87,90 +87,93 @@ exports.login = (req, res, next) => {
 }; 
 
 exports.getProfile = async (req, res) => {
-  // récupération de l'id de l'utilisateur pour extraire ses données et les afficher. 
-
-//pourquoi je n'arrive pas à faire le lien entre le middleware Auth et ma fonction getProfile ? 
-
-//Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
+  //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
   const token = req.headers.authorization.split(' ')[1];
-//Vérification de la bonne correspondance des deux clés token
+  //Vérification de la bonne correspondance des deux clés token
   const decodedToken = jwt.verify(token, "CaputDraconis123!");
-  const identifiant = decodedToken.userId;
+  const identifiant = decodedToken.userId;  
 
-   try {
-      const userDetails = await User.findOne({where: {id: identifiant}})
-      res.status(200).send({
-          status: 200,
-          message: 'Data fetched Successfully',
-          data: userDetails
-      });
-  }
-  catch(error) {
-    return res.status(400).send({
-        message: 'Unable to fetch data',
-        errors: error,
-        status: 400
-    });
-    }
+  console.log("req.params.id",req.params.id)
+        try {
+            const userDetails = await User.findOne({where: {id: req.params.id}})
+            res.status(200).send({
+                status: 200,
+                message: 'Data fetched Successfully',
+                data: userDetails
+            });
+        }
+        catch(error) {
+         console.log(error)
+        }
 }; 
 
-exports.deleteProfile = (req, res) => {
-  //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
-  const token = req.headers.authorization.split(' ')[1];
-  //Vérification de la bonne correspondance des deux clés token
-  const decodedToken = jwt.verify(token, "CaputDraconis123!");
-  const userId = decodedToken.userId;
+// exports.getOtherProfile = async (req, res) => {
+//    try {
+//      const userDetails = await User.findByPk(req.params.id) 
+//            res.status(200).send({
+//              status: 200,
+//              message: 'Data fetched Successfully',
+//              data: userDetails
+//          })
+//    }catch(error) {
+//          return res.status(400).send({
+//            message: 'Unable to fetch data',
+//            errors: error,
+//            status: 400
+//          });
+//    }
+// };
 
-  User.findOne({where: {id: userId}})
-  .then(user => {
-    
-      User.destroy({where : {id : user.id}})
-          .then(res.status(200).json({message: "utilisateur supprimé"}))
-          .catch(err => {
-            res.status(400).json({message: "suppression impossible"})
-          })
-      
-  .catch(err => {
-    res.status(500).json({message: "erreur pendant la suppression"})
-  })
-})
+exports.deleteProfile = (req, res) => {
+    //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
+    const token = req.headers.authorization.split(' ')[1];
+    //Vérification de la bonne correspondance des deux clés token
+    const decodedToken = jwt.verify(token, "CaputDraconis123!");
+    const userId = decodedToken.userId;
+
+    User.findOne({where: {id: userId}})
+        .then(user => {
+            User.destroy({where : {id : user.id}})
+              .then(function(res){
+                res.status(200).json({message: "utilisateur supprimé"})
+              })
+              .catch(function(error){
+                  console.log("ERRUR SUPPRESSION", error)
+              })
+        })
+        .catch(err => {
+          res.status(500).json({message: "erreur pendant la suppression"})
+        })
 };
   
-
-//l'id doit correspondre à l'id de l'utilisateur. 
-//La différence avec l'userId n'est pas claire.ce n'est plus celui dans le token mais dans la table mysql ?
-        
-     
-
-
-exports.modifyProfil =  (req, res, next) => {
-  //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
-  const token = req.headers.authorization.split(' ')[1];
-  //Vérification de la bonne correspondance des deux clés token
-  const decodedToken = jwt.verify(token, "CaputDraconis123!");
-  const userId = decodedToken.userId;
-
-  const newUserData = req.file ?
-    {
+exports.modifyUser = (req, res) => { 
+    //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
+    const token = req.headers.authorization.split(' ')[1];
+    //Vérification de la bonne correspondance des deux clés token
+    const decodedToken = jwt.verify(token, "CaputDraconis123!");
+    const userId = decodedToken.userId;
       
-// req.protocol(http ou https) puis req.get('host') c'est la racine du serveur 
-      imageUser: `${req.protocol}://${req.get('host')}/image/${req.file.filename}`
-    } : 
-    { ...req.body };
+    const userObject = req.file ?
+      {
+        ...req.body,
+    // req.protocol(http ou https) puis req.get('host') c'est la racine du serveur 
+        imageUser: `${req.protocol}://${req.get('host')}/image/${req.file.filename}`
+      } : 
+      { ...req.body };
 
     User.findOne({ userId: userId })
       .then(user => {
-          User.update(newUserData, { where : {id : userId}})
-            .then(()=> res.status(200).json({message: 'Profil modifiée'}))
-            .catch(error => res.status(400).json({ error }))
-        })
-        .catch(function(error) {
-          res.status(500).json({ error })
-          console.log(error)
-        })
-          
-  };
-
-
-
-
+        User.update(userObject, { where : {id : userId}})
+            .then(function(){
+              res.status(200).send({
+                message: 'user modifié',
+                data : userObject
+              })
+            })
+            .catch(function(error){
+              console.log(error)
+            })
+      })
+      .catch(error => res.status(500).json({ error })
+      )
+};

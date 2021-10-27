@@ -25,11 +25,11 @@ const errorHandler = error => {
     case 'EACCES':
       console.error(bind + ' requires elevated privileges.');
       process.exit(1);
-      break;
+    break;
     case 'EADDRINUSE':
       console.error(bind + ' is already in use.');
       process.exit(1);
-      break;
+    break;
     default:
       throw error;
   }
@@ -43,6 +43,5 @@ server.on('listening', () => {
   const bind = typeof address === 'string' ? 'pipe ' + address : 'port ' + port;
   console.log('Listening on ' + bind);
 });
-
 
 server.listen(port);
