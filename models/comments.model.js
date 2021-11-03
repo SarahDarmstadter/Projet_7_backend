@@ -2,7 +2,7 @@ module.exports = (sequelize, Sequelize) => {
     const Comment = sequelize.define("comment", {
       content: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: true
       },
       image: {
         type: Sequelize.STRING,

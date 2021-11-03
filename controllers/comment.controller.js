@@ -2,6 +2,7 @@ const modele = require("../models");
 const Post = modele.posts;
 const Comment = modele.comments;
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
 
 //Creation d'un commentaire par un utilisteur 
 
@@ -95,6 +96,22 @@ exports.readUserComments = (req, res, next) => {
 
 //suppression d'un com par son auteur 
 exports.deleteComment = (req, res) => {
+
+    Comment.findByPk(req.params.id)
+    .then(comment =>{
+      let filename = comment.image.split("/image/")[1];
+      fs.unlink(`image/${filename}`, 
+        (err => {
+          if (err) console.log(err);
+          else {
+            console.log(`\nDeleted file: image/${filename}`)
+          }
+        }))
+    })
+    .catch(function(error){
+      console.log(error)
+    })
+  
   const id = req.params.id;
   Comment.destroy({where : {id : req.params.id}})
       .then(data => {

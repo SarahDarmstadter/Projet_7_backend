@@ -71,7 +71,8 @@ exports.login = (req, res, next) => {
               res.status(200).json({
                 message : "utilisateur connecté",
                 token : token,
-                userId: user.id
+                userId: user.id,
+                isAdmin : user.isAdmin
               });
             });
           } else{
@@ -125,25 +126,15 @@ exports.getProfile = async (req, res) => {
 // };
 
 exports.deleteProfile = (req, res) => {
-    //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
-    const token = req.headers.authorization.split(' ')[1];
-    //Vérification de la bonne correspondance des deux clés token
-    const decodedToken = jwt.verify(token, "CaputDraconis123!");
-    const userId = decodedToken.userId;
 
-    User.findOne({where: {id: userId}})
-        .then(user => {
-            User.destroy({where : {id : user.id}})
-              .then(function(res){
-                res.status(200).json({message: "utilisateur supprimé"})
-              })
-              .catch(function(error){
-                  console.log("ERRUR SUPPRESSION", error)
-              })
-        })
-        .catch(err => {
-          res.status(500).json({message: "erreur pendant la suppression"})
-        })
+        User.destroy({where : {id : req.params.id}})
+          .then(function(){
+            res.status(200).json({message: "utilisateur supprimé"})
+          })
+          .catch(function(error){
+              console.log("ERRUR SUPPRESSION", error)
+          })
+    
 };
   
 exports.modifyUser = (req, res) => { 

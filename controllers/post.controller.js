@@ -65,6 +65,7 @@ exports.readOnePost = (req, res, next) => {
     
 };
 
+
 exports.readUserPosts = (req, res, next) => {
   console.log(req.params)
     Post.findAll({where : {userId : req.params.userId}})
@@ -117,11 +118,11 @@ exports.updatePost = (req, res) => {
                 console.log(`\nDeleted file: image/${filename}`)
               }
             }))
-      })
-      .catch(function(error){
-        console.log(error)
-      })
-    }
+        })
+        .catch(function(error){
+          console.log(error)
+        })
+      }
 
       Post.update(newData, { where : {id : req.params.id}})
         .then( num => {
@@ -136,6 +137,37 @@ exports.updatePost = (req, res) => {
         })
 };
 
+exports.deleteImg = (req, res) => {
+
+  Post.findByPk(req.params.id)
+        .then(post=>{
+          let filename = post.image.split("/image/")[1];
+          fs.unlink(`image/${filename}`, 
+            (err => {
+              if (err) console.log(err);
+              else {
+                console.log(`\nDeleted file: image/${filename}`)
+              }
+            }))
+        })
+        .catch(function(error){
+          console.log(error)
+        })
+
+        
+        Post.update({ where : {id : req.params.id}})
+        .then( num => {
+          if (num == 1) {
+            res.status(200).json({message : " post modifié ! "}) 
+  
+          } else {
+            res.status(400).json({message : "le post n'a pas été modifié"})} 
+        })
+        .catch( err => {
+            res.status(400).json({message : "le post n'a pas été modifié catch n2"})
+        })
+
+}
 
 
 

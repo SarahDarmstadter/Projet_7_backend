@@ -25,29 +25,25 @@ db.users = require("./user.models")(sequelize, Sequelize);
 
 // mise en place des relations "one-to-many"
 //Un utlisateur a plusieurs posts 
-db.users.hasMany(db.posts, { as: "posts" })
-db.posts.belongsTo(db.users, {
-  foreignKey: "userId",
-  as: "user",
-  onDelete: 'CASCADE',
-  onUpdate: 'CASCADE'
-  });
+
 
 // un utilisateur a plusieurs commentaires
-db.users.hasMany(db.comments, { as: "comments" });
-db.comments.belongsTo(db.users, {
-  foreignKey: "userId",
-  as: "user",
+db.users.hasMany(db.comments, { 
+  as: "comments", 
+  onDelete : 'CASCADE',
+  onUpdate : 'CASCADE' 
+});
+
+db.users.hasMany(db.posts, {
+  as :"posts",
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
 
-db.users.hasMany(db.likes, { as: "likes" });
-db.likes.belongsTo(db.users, {
-  foreignKey: "userId",
-  as: "user",
-  onDelete: 'CASCADE',
-  onUpdate: 'CASCADE'
+db.users.hasMany(db.likes, { 
+  as: "likes", 
+onDelete : 'CASCADE', 
+onUpdate : 'CASCADE' 
 });
 
 db.posts.hasMany(db.comments, {
@@ -55,13 +51,17 @@ db.posts.hasMany(db.comments, {
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
+
 db.posts.hasMany(db.likes, {
   as :"likes",
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
 
-db.comments.belongsTo(db.posts);
-db.likes.belongsTo(db.posts);
+db.posts.belongsTo(db.users, {foreignKey: "userId"});
+db.comments.belongsTo(db.users, {foreignKey: "userId"});
+db.likes.belongsTo(db.users, {foreignKey: "userId"});
+db.comments.belongsTo(db.posts, {foreignKey:  "postId"});
+db.likes.belongsTo(db.posts, {foreignKey: "postId"});
 
 module.exports = db;

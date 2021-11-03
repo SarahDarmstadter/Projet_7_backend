@@ -8,7 +8,7 @@
     router.post("/sign-up",multer, users.signup);
     router.post("/login",  users.login);
     router.get("/profil/:id", auth, multer, users.getProfile);
-    router.delete("/suppression-profile", auth, multer, users.deleteProfile);
+    router.delete("/:id/suppression-profile", auth, multer, users.deleteProfile);
     router.put("/profil/update", auth, multer, users.modifyUser);
 
 
