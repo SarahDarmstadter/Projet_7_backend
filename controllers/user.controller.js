@@ -9,7 +9,6 @@ const fs = require('fs');
 
 exports.signup =   (req, res, next) => {
   const password = req.body.password;
-  console.log(password)
   const regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[-+!*$@%_])([-+!*$@%_\w]{8,15})$/gm;
   if (password.match(regex)){
     User.findOne({ where : {email : req.body.email} })
@@ -108,22 +107,22 @@ exports.getProfile = async (req, res) => {
         }
 }; 
 
-// exports.getOtherProfile = async (req, res) => {
-//    try {
-//      const userDetails = await User.findByPk(req.params.id) 
-//            res.status(200).send({
-//              status: 200,
-//              message: 'Data fetched Successfully',
-//              data: userDetails
-//          })
-//    }catch(error) {
-//          return res.status(400).send({
-//            message: 'Unable to fetch data',
-//            errors: error,
-//            status: 400
-//          });
-//    }
-// };
+ exports.getOtherProfile = async (req, res) => {
+try {
+     const userDetails = await User.findByPk(req.params.id) 
+            res.status(200).send({
+              status: 200,
+              message: 'Data fetched Successfully',
+              data: userDetails
+          })
+    }catch(error) {
+          return res.status(400).send({
+            message: 'Unable to fetch data',
+            errors: error,
+            status: 400
+          });
+    }
+ };
 
 exports.deleteProfile = (req, res) => {
 
@@ -132,7 +131,7 @@ exports.deleteProfile = (req, res) => {
             res.status(200).json({message: "utilisateur supprimé"})
           })
           .catch(function(error){
-              console.log("ERRUR SUPPRESSION", error)
+              console.log("ERREUR SUPPRESSION", error)
           })
     
 };

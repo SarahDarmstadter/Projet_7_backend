@@ -4,6 +4,7 @@ const bodyParser =require('body-parser');
 const path = require('path');
 const cors = require('cors');
 const db = require("./models");
+require('dotenv').config()
 const postRouter = require('./routes/post.routes');
 const likeRouter = require('./routes/likes.routes')
 const commentRouter = require('./routes/comments.routes');

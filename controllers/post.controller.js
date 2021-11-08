@@ -50,37 +50,41 @@ exports.readAllPosts = (req, res, next) => {
 };
     
 // lire un post via son postId (avec les commentaires si y'en a)
-exports.readOnePost = (req, res, next) => {
-  // récuper le postId 
-    const id = req.params.id;
-    console.log(id)
-// Est-ce que ce sera au front d'envoyer l'id du post dans les params de l'url ? 
-   Post.findByPk(id, {include : "comments"})
-      .then(data => {
-        res.status(200).json(data);
-      })
-      .catch(err => {
-        res.status(500).json({message: "une erreur s'est produite pour la lecture du post ayant pour id: " + id});
-      });
+// exports.readOnePost = (req, res, next) => {
+//   // récuper le postId 
+//     const id = req.params.id;
+//     console.log(id)
+// // Est-ce que ce sera au front d'envoyer l'id du post dans les params de l'url ? 
+//    Post.findByPk(id, {include : "comments"})
+//       .then(data => {
+//         res.status(200).json(data);
+//       })
+//       .catch(err => {
+//         res.status(500).json({message: "une erreur s'est produite pour la lecture du post ayant pour id: " + id});
+//       });
     
-};
+// };
 
 
-exports.readUserPosts = (req, res, next) => {
-  console.log(req.params)
-    Post.findAll({where : {userId : req.params.userId}})
-    .then(data => {
-      res.status(200).json(data)
-    })
-    .catch( err => {
-      console.log(err)
-      res.status(400).json({message : "les posts de cet auteur sont indisponibles"})
+// exports.readUserPosts = (req, res, next) => {
+//   console.log(req.params)
+//     Post.findAll({where : {userId : req.params.userId}})
+//     .then(data => {
+//       res.status(200).json(data)
+//     })
+//     .catch( err => {
+//       console.log(err)
+//       res.status(400).json({message : "les posts de cet auteur sont indisponibles"})
     
-    })
+//     })
 
-};
+// };
+
+
+
 
 //suppression d'un post par son auteur 
+
 exports.deletePost = (req, res) => {
 const id = req.params.id;
 console.log(id)
