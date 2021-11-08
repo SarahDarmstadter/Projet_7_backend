@@ -33,7 +33,7 @@ exports.signup =   (req, res, next) => {
                   const token = jwt.sign({
                     email: user.email,
                     userId: user.id
-                  }, "CaputDraconis123!", function(err, token){
+                  }, process.env.SECRET_KEY, function(err, token){
                     res.status(200).json({
                       message : "utilisateur créé et connecté",
                       token : token,
@@ -66,7 +66,7 @@ exports.login = (req, res, next) => {
             const token = jwt.sign({
               email: user.email,
               userId: user.id
-            }, "CaputDraconis123!", function(err, token){
+            }, process.env.SECRET_KEY, function(err, token){
               res.status(200).json({
                 message : "utilisateur connecté",
                 token : token,
@@ -90,7 +90,7 @@ exports.getProfile = async (req, res) => {
   //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
   const token = req.headers.authorization.split(' ')[1];
   //Vérification de la bonne correspondance des deux clés token
-  const decodedToken = jwt.verify(token, "CaputDraconis123!");
+  const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
   const identifiant = decodedToken.userId;  
 
   console.log("req.params.id",req.params.id)
@@ -140,7 +140,7 @@ exports.modifyUser = (req, res) => {
     //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
     const token = req.headers.authorization.split(' ')[1];
     //Vérification de la bonne correspondance des deux clés token
-    const decodedToken = jwt.verify(token, "CaputDraconis123!");
+    const decodedToken = jwt.verify(token, process.env.SECRET_KEY);
     const userId = decodedToken.userId;
       
     const userObject = req.file ?

@@ -5,7 +5,7 @@ module.exports = (req, res, next) => {
     //Récupération du token dans le header authorization. Le mot clé Bearer arrive en index0 et le token en index 1 
     const token = req.headers.authorization.split(' ')[1]
     //Vérification de la bonne correspondance des deux clés token
-    const decodedToken = jwt.verify(token, "CaputDraconis123!")
+    const decodedToken = jwt.verify(token, process.env.SECRET_KEY)
     const userId = decodedToken.userId
     console.log(userId);
     

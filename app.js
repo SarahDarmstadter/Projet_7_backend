@@ -1,10 +1,10 @@
 const express = require('express');
+require('dotenv').config();
 const bodyParser =require('body-parser');
 //path donne accès au chemin des images
 const path = require('path');
 const cors = require('cors');
 const db = require("./models");
-require('dotenv').config()
 const postRouter = require('./routes/post.routes');
 const likeRouter = require('./routes/likes.routes')
 const commentRouter = require('./routes/comments.routes');
