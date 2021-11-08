@@ -1,9 +1,10 @@
-
 const modele = require('../models');
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 const User = modele.users;
 const auth = require('../middleware/auth.js');
+
 //Importation de file system(fs) pour ne pas saturer le serveur de fichiers inutiles après suppression ou modification
 const fs = require('fs');
 
